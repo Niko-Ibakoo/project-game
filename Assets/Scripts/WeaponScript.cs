@@ -15,7 +15,7 @@ public class WeaponScript : MonoBehaviour
         CheckWeapon();
         if (canGrab && Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("I am trying to grab it !!");
+         
             GrabWeapon(hit);
             
         }
@@ -36,13 +36,12 @@ public class WeaponScript : MonoBehaviour
     {
         if (hit.transform.CompareTag("canGrab"))
         {
-            Debug.Log("this can be grabbed");
+           
             canGrab = true;
         }
         else
         {
-            canGrab = false;
-            Debug.Log("this can not be grabbed");
+
         }
     }
 }

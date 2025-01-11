@@ -2842,7 +2842,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4605542281241450661, guid: 9e430cc484a3bbd4a832b7edbf338997, type: 3}
       propertyPath: m_Name
-      value: throwingObj (6)
+      value: enginePart
       objectReference: {fileID: 0}
     - target: {fileID: 4605542281241450661, guid: 9e430cc484a3bbd4a832b7edbf338997, type: 3}
       propertyPath: m_Layer
@@ -2850,7 +2850,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4605542281241450661, guid: 9e430cc484a3bbd4a832b7edbf338997, type: 3}
       propertyPath: m_TagString
-      value: canGrab
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 7110533925799160531, guid: 9e430cc484a3bbd4a832b7edbf338997, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
