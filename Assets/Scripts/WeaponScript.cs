@@ -41,7 +41,7 @@ public class WeaponScript : MonoBehaviour
         }
         else
         {
-
+            canGrab = false;
         }
     }
 }
