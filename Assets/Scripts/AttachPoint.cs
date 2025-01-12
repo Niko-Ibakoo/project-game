@@ -4,7 +4,7 @@ public class AttachPoint : MonoBehaviour
 {
     public bool CanAttach(GameObject objToAttach)
     {
-        return objToAttach.CompareTag("Attachable");
+        return objToAttach.CompareTag("Attachable"); //this should be dynamic
     }
 
     public void Attach(GameObject objToAttach)

@@ -6,10 +6,10 @@ public class ObjectPicker : MonoBehaviour
 {
 
     public Transform holdPoint;
-    public float pickUpRange = 10f;
+    public float pickUpRange = 2f;
     public LayerMask pickable;
     private GameObject heldObject = null;
-    public Image attachMessage;
+    public Image snappablePointer, defaultPointer;
 
     //store the layer of the heldObject so I can make it invisible when picked up
 
@@ -52,7 +52,8 @@ public class ObjectPicker : MonoBehaviour
         else
         {
             // Ensure the attach message is hidden when no object is held
-            attachMessage.enabled = false;
+            snappablePointer.enabled = false;
+            defaultPointer.enabled = true; 
         }
 
     }
@@ -65,10 +66,12 @@ public class ObjectPicker : MonoBehaviour
         {
             //check if the object has a rigidbody
             Rigidbody rb = hit.transform.GetComponent<Rigidbody>();
+            Collider col = hit.transform.GetComponent<Collider>(); // Get the collider
             if (rb != null)
             {
 
                 heldObject = hit.collider.gameObject;
+                col.enabled = false;
 
                 //disable physics while holding the object
                 rb.isKinematic = true;
@@ -97,9 +100,12 @@ public class ObjectPicker : MonoBehaviour
         {
             // Re-enable physics
             Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+            // Re-enable the collider
+            Collider col = heldObject.GetComponent<Collider>();
             if (rb != null && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 rb.isKinematic = false;
+                col.enabled = true;
             }
 
             // Unparent the object
@@ -113,9 +119,11 @@ public class ObjectPicker : MonoBehaviour
         if (heldObject != null)
         {
             Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+            Collider col = heldObject.transform.GetComponent<Collider>(); // Get the collider
             if (rb != null && Input.GetKeyDown(KeyCode.Mouse1))
             {
                 rb.isKinematic = false;
+                col.enabled = true;
                 heldObject.transform.SetParent(null);
                 heldObject = null;
                 rb.AddForce(Camera.main.transform.forward * 30f, ForceMode.Impulse);
@@ -143,6 +151,9 @@ public class ObjectPicker : MonoBehaviour
         }
     }
 
+
+
+    //all this does is display a message if the player is looking at a snapping point
     void CheckForSnappingPoint()
     {
         //this is a very basic snapping point check, all it does it checks if the camera is looking at an object with the SnapPoint tag
@@ -157,11 +168,13 @@ public class ObjectPicker : MonoBehaviour
             if (hit.transform.CompareTag("SnapPoint"))
             {
                 Debug.Log("you are looking at a snapping point");
-                attachMessage.enabled = true;
+                defaultPointer.enabled = false;
+                snappablePointer.enabled = true;
                 return;
             }
 
         }
-        attachMessage.enabled = false;
+        snappablePointer.enabled = false;
+        defaultPointer.enabled = true;
     }
 }
