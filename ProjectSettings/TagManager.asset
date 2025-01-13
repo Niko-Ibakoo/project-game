@@ -9,6 +9,8 @@ TagManager:
   - canGrab
   - Attachable
   - SnapPoint
+  - Door
+  - handle
   layers:
   - Default
   - TransparentFX

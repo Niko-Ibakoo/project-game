@@ -3,21 +3,21 @@ using UnityEngine;
 public class WeaponScript : MonoBehaviour
 {
     public Transform equipPosition;
-    public float distance =10f;
+    public float distance = 10f;
     GameObject currentWeapon;
     RaycastHit hit;
     bool canGrab;
     public float throwForce = 10f;
     // Update is called once per frame
 
- void Update()
+    void Update()
     {
         CheckWeapon();
         if (canGrab && Input.GetKeyDown(KeyCode.E))
         {
-         
+
             GrabWeapon(hit);
-            
+
         }
         if (currentWeapon != null)
         {
@@ -25,35 +25,36 @@ public class WeaponScript : MonoBehaviour
             {
                 DropWeapon();
             }
- 
+
         }
         ThrowWeapon();
     }
     //with this function we can check if the player can grab a weapon by shooting a raycast in front of the player
-   public void CheckWeapon()
-{
-    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance))
+    public void CheckWeapon()
     {
-        if (hit.transform.CompareTag("canGrab"))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, distance))
         {
-           
-            canGrab = true;
-        }
-        else
-        {
-            canGrab = false;
+
+            if (hit.transform.CompareTag("canGrab"))
+            {
+
+                canGrab = true;
+            }
+            else
+            {
+                canGrab = false;
+            }
         }
     }
-}
-  public void GrabWeapon(RaycastHit hit)
-{
-    currentWeapon = hit.transform.gameObject;
-    currentWeapon.transform.position = equipPosition.position;
-    currentWeapon.transform.parent = equipPosition;
-    currentWeapon.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
-    currentWeapon.GetComponent<Rigidbody>().isKinematic = true;
-    
-}
+    public void GrabWeapon(RaycastHit hit)
+    {
+        currentWeapon = hit.transform.gameObject;
+        currentWeapon.transform.position = equipPosition.position;
+        currentWeapon.transform.parent = equipPosition;
+        currentWeapon.transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+        currentWeapon.GetComponent<Rigidbody>().isKinematic = true;
+
+    }
     public void DropWeapon()
     {
         currentWeapon.transform.parent = null;
@@ -63,7 +64,7 @@ public class WeaponScript : MonoBehaviour
 
     public void ThrowWeapon()
     {
-        if(currentWeapon != null && Input.GetMouseButtonDown(1))
+        if (currentWeapon != null && Input.GetMouseButtonDown(1))
         {
             //play throw sound
             currentWeapon.transform.parent = null;
@@ -71,11 +72,11 @@ public class WeaponScript : MonoBehaviour
             currentWeapon.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * throwForce, ForceMode.Impulse);
             currentWeapon = null;
         }
-    {
-        
+        {
+
+        }
+
+
     }
-        
-         
-    }
-    
+
 }

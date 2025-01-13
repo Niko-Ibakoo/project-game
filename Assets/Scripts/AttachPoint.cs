@@ -12,6 +12,7 @@ public class AttachPoint : MonoBehaviour
         // Align the object to the exact position and rotation of the AttachPoint
         objToAttach.transform.position = transform.position;
         objToAttach.transform.rotation = transform.rotation;
+        
         // Parent the object to the AttachPoint to maintain alignment
         objToAttach.transform.SetParent(transform);
 

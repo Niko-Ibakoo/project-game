@@ -27,17 +27,11 @@ public class LiftScript : MonoBehaviour
 
       if (target.transform.name == "upButton" && Input.GetMouseButtonDown(0))
       {
-        liftObject.transform.localScale = new Vector3(liftObject.transform.localScale.x, liftObject.transform.localScale.y + 0.5f, liftObject.transform.localScale.z);
-        // Update the collider size
-        BoxCollider collider = liftObject.GetComponent<BoxCollider>();
-        collider.size = liftObject.transform.localScale;
+        liftObject.transform.position = new Vector3(liftObject.transform.position.x, liftObject.transform.position.y + 0.5f, liftObject.transform.position.z);
       }
       else if (target.transform.name == "downButton" && Input.GetMouseButtonDown(0))
       {
-        liftObject.transform.localScale = new Vector3(liftObject.transform.localScale.x, liftObject.transform.localScale.y - 0.5f, liftObject.transform.localScale.z);
-        /// Update the collider size
-        BoxCollider collider = liftObject.GetComponent<BoxCollider>();
-        collider.size = liftObject.transform.localScale;
+        
       }
 
     }

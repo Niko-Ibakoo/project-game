@@ -8,16 +8,12 @@ public class ObjectPicker : MonoBehaviour
     public Transform holdPoint;
     public float pickUpRange = 2f;
     public LayerMask pickable;
-    private GameObject heldObject = null;
+    public GameObject heldObject = null;
     public Image snappablePointer, defaultPointer;
 
-    //store the layer of the heldObject so I can make it invisible when picked up
-
-
-    // Update is called once per frame
     void Update()
     {
-        // Check if the player is looking at a snapping point
+
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -40,20 +36,23 @@ public class ObjectPicker : MonoBehaviour
             }
         }
         // Add this for attaching objects
-        if (Input.GetKeyDown(KeyCode.R) && heldObject != null)
+        if (Input.GetKeyDown(KeyCode.E) && heldObject != null)
         {
+          
             TryAttachObject();
         }
 
         if (heldObject != null)
         {
+
             CheckForSnappingPoint();
         }
         else
         {
             // Ensure the attach message is hidden when no object is held
             snappablePointer.enabled = false;
-            defaultPointer.enabled = true; 
+            defaultPointer.enabled = true;
+
         }
 
     }
@@ -64,7 +63,9 @@ public class ObjectPicker : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, pickUpRange, pickable))
         {
+
             //check if the object has a rigidbody
+
             Rigidbody rb = hit.transform.GetComponent<Rigidbody>();
             Collider col = hit.transform.GetComponent<Collider>(); // Get the collider
             if (rb != null)
@@ -76,7 +77,7 @@ public class ObjectPicker : MonoBehaviour
                 //disable physics while holding the object
                 rb.isKinematic = true;
 
-                //set the position and rotation of the hold point to match the object being ppicked up
+                //set the position and rotation of the hold point to match the object being picked up
                 holdPoint.position = hit.transform.position;
                 holdPoint.rotation = hit.transform.rotation;
 
@@ -87,10 +88,8 @@ public class ObjectPicker : MonoBehaviour
                 //Resets the rotation relative to the holdPoint, ensuring the object maintains its original orientation.
                 heldObject.transform.localRotation = Quaternion.identity;
 
-
-
-
             }
+
         }
     }
 
@@ -139,19 +138,24 @@ public class ObjectPicker : MonoBehaviour
         //check if the ray hits anything within the specified range (pickupRange)
         if (Physics.Raycast(ray, out RaycastHit hit, pickUpRange))
         {
-            // If the object has an AttachPoint component and can attach the heldObject (checks via CanAttach method)
-            AttachPoint attachPoint = hit.transform.GetComponent<AttachPoint>();
+            // If the object has an snapPoint component and can attach the heldObject (checks via CanAttach method)
+            AttachPoint attachPoint = hit.collider.GetComponent<AttachPoint>();
             if (attachPoint != null)
             {
-                // Call the Attach method on the AttachPoint to attach the held object
+                 
+
+
+                // Call the Attach method on the attachPoint to attach the held object
                 attachPoint.Attach(heldObject);
                 // Clear the reference to the heldObject, as it is now attached and no longer being held
                 heldObject = null;
             }
+            else
+            {
+                //Debug.Log("No attach point found for " + attachPoint);
+            }
         }
     }
-
-
 
     //all this does is display a message if the player is looking at a snapping point
     void CheckForSnappingPoint()
@@ -165,9 +169,9 @@ public class ObjectPicker : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, pickUpRange))
         {
             //check the tags here and then enable or disable the attach message
-            if (hit.transform.CompareTag("SnapPoint"))
+            if (hit.collider.CompareTag("SnapPoint"))
             {
-                Debug.Log("you are looking at a snapping point");
+ 
                 defaultPointer.enabled = false;
                 snappablePointer.enabled = true;
                 return;
@@ -178,3 +182,7 @@ public class ObjectPicker : MonoBehaviour
         defaultPointer.enabled = true;
     }
 }
+
+
+
+
