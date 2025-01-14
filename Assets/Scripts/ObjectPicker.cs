@@ -7,26 +7,31 @@ public class ObjectPicker : MonoBehaviour
 {
 
     public Transform holdPoint;
-    public float pickUpRange = 2f;
+    public float pickUpRange = 5f;
     public LayerMask pickable;
     public GameObject heldObject = null;
     public Image snappablePointer, defaultPointer;
+    public float rotationSpeed = 20f;
+
 
     void Update()
     {
+        //rotate
+        RotateItem();
 
-
+        //pick up and drop
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (heldObject == null)
             {
                 TryPickUpObject();
             }
-            else
+            else if (heldObject != null)
             {
                 DropObject();
             }
         }
+        //throw
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             if (heldObject != null)
@@ -34,19 +39,15 @@ public class ObjectPicker : MonoBehaviour
                 ThrowObject();
 
             }
-            else if (heldObject == null)
-            {
-                Debug.Log("TYING TO DETACH OBJECT");
-                DetachObject();
-            }
+
         }
-        // Add this for attaching objects
+        // Attach 
         if (Input.GetKeyDown(KeyCode.E) && heldObject != null)
         {
 
             TryAttachObject();
         }
-
+        //check for snap
         if (heldObject != null)
         {
 
@@ -69,8 +70,6 @@ public class ObjectPicker : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, pickUpRange, pickable))
         {
 
-            //check if the object has a rigidbody
-
             Rigidbody rb = hit.transform.GetComponent<Rigidbody>();
             Collider col = hit.transform.GetComponent<Collider>(); // Get the collider
             if (rb != null)
@@ -83,6 +82,7 @@ public class ObjectPicker : MonoBehaviour
                 rb.isKinematic = true;
 
                 //set the position and rotation of the hold point to match the object being picked up
+                //raycast              //object on the floor
                 holdPoint.position = hit.transform.position;
                 holdPoint.rotation = hit.transform.rotation;
 
@@ -93,11 +93,13 @@ public class ObjectPicker : MonoBehaviour
                 //Resets the rotation relative to the holdPoint, ensuring the object maintains its original orientation.
                 heldObject.transform.localRotation = Quaternion.identity;
 
+
             }
+            //I need to be able to rotrate the object while holding it
+            //how the fuck do I do that
 
         }
     }
-
     void DropObject()
     {
         if (heldObject != null)
@@ -160,15 +162,11 @@ public class ObjectPicker : MonoBehaviour
         }
     }
 
-    //all this does is display a message if the player is looking at a snapping point
     void CheckForSnappingPoint()
     {
-        //this is a very basic snapping point check, all it does it checks if the camera is looking at an object with the SnapPoint tag
-        //Ideally it should check if the heldobject and the snapping point are compatible e.g only attach a tire to a tiresnap, instead of attaching anythingto a snap
-        // I could create a tag and compare the tags of the held object and the snapping point if they are the same then it can snap.
-        //e.g radiatorSnap for the snap and the same for the radiator
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //if the camera is looking at an object with the SnapPoint tag, show the attach message
+
         if (Physics.Raycast(ray, out RaycastHit hit, pickUpRange))
         {
             //check the tags here and then enable or disable the attach message
@@ -188,10 +186,36 @@ public class ObjectPicker : MonoBehaviour
         snappablePointer.enabled = false;
         defaultPointer.enabled = true;
     }
-
     void DetachObject()
     {
         //TO DO...
+    }
+
+    //rotate
+    void RotateItem()
+    {
+        if (Input.mouseScrollDelta.y < 0)
+        {
+            if (heldObject != null)
+            {
+                heldObject.transform.Rotate(rotationSpeed, 0, 0);
+            }
+        }
+        else if (Input.mouseScrollDelta.y > 0)
+        {
+            if (heldObject != null)
+            {
+                heldObject.transform.Rotate(-rotationSpeed, 0, 0);
+            }
+        }
+        //works but still buggy, it doesnt stop the first if statment
+        if (Input.GetKey(KeyCode.LeftControl) && Input.mouseScrollDelta.y < 0)
+        {
+            if (heldObject != null)
+            {
+                heldObject.transform.Rotate(0, rotationSpeed, 0);
+            }
+        }
     }
 }
 
