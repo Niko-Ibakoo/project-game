@@ -1,7 +1,7 @@
-using JetBrains.Annotations;
+
 using UnityEngine;
 using UnityEngine.UI; //import for UI components
-
+using TMPro;
 
 public class ObjectPicker : MonoBehaviour
 {
@@ -11,11 +11,15 @@ public class ObjectPicker : MonoBehaviour
     public LayerMask pickable;
     public GameObject heldObject = null;
     public Image snappablePointer, defaultPointer;
+    public TextMeshProUGUI itemName;
     public float rotationSpeed = 20f;
 
 
     void Update()
     {
+        //handle item name
+        HandleUI.HandleUIText(itemName, pickUpRange);
+
         //rotate
         RotateItem();
 
@@ -62,7 +66,8 @@ public class ObjectPicker : MonoBehaviour
         }
 
     }
-
+    //item name
+    
     void TryPickUpObject()
     {
 
@@ -190,7 +195,6 @@ public class ObjectPicker : MonoBehaviour
     {
         //TO DO...
     }
-
     //rotate
     void RotateItem()
     {
@@ -206,14 +210,6 @@ public class ObjectPicker : MonoBehaviour
             if (heldObject != null)
             {
                 heldObject.transform.Rotate(-rotationSpeed, 0, 0);
-            }
-        }
-        //works but still buggy, it doesnt stop the first if statment
-        if (Input.GetKey(KeyCode.LeftControl) && Input.mouseScrollDelta.y < 0)
-        {
-            if (heldObject != null)
-            {
-                heldObject.transform.Rotate(0, rotationSpeed, 0);
             }
         }
     }
