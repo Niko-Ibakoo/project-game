@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI; //import for UI components
 
@@ -20,7 +21,6 @@ public class ObjectPicker : MonoBehaviour
             if (heldObject == null)
             {
                 TryPickUpObject();
-
             }
             else
             {
@@ -34,11 +34,16 @@ public class ObjectPicker : MonoBehaviour
                 ThrowObject();
 
             }
+            else if (heldObject == null)
+            {
+                Debug.Log("TYING TO DETACH OBJECT");
+                DetachObject();
+            }
         }
         // Add this for attaching objects
         if (Input.GetKeyDown(KeyCode.E) && heldObject != null)
         {
-          
+
             TryAttachObject();
         }
 
@@ -142,18 +147,16 @@ public class ObjectPicker : MonoBehaviour
             AttachPoint attachPoint = hit.collider.GetComponent<AttachPoint>();
             if (attachPoint != null)
             {
-                 
-
-
-                // Call the Attach method on the attachPoint to attach the held object
-                attachPoint.Attach(heldObject);
-                // Clear the reference to the heldObject, as it is now attached and no longer being held
-                heldObject = null;
+                // Check if the attach point can attach the held object
+                if (attachPoint.CanAttach(heldObject))
+                {
+                    Debug.Log($"Attaching {heldObject.name} to {hit.collider.name}");
+                    // Attach the object
+                    attachPoint.Attach(heldObject);
+                    heldObject = null;
+                }
             }
-            else
-            {
-                //Debug.Log("No attach point found for " + attachPoint);
-            }
+
         }
     }
 
@@ -169,19 +172,29 @@ public class ObjectPicker : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, pickUpRange))
         {
             //check the tags here and then enable or disable the attach message
-            if (hit.collider.CompareTag("SnapPoint"))
+            if (hit.collider.CompareTag("SnapPoint") && heldObject.CompareTag("Attachable"))
             {
- 
-                defaultPointer.enabled = false;
-                snappablePointer.enabled = true;
-                return;
+                if (heldObject.name != null && hit.collider.GetComponent<AttachPoint>().itemTag == heldObject.name)
+                {
+                    snappablePointer.enabled = true;
+                    defaultPointer.enabled = false;
+                    return;
+                }
+
+
             }
 
         }
         snappablePointer.enabled = false;
         defaultPointer.enabled = true;
     }
+
+    void DetachObject()
+    {
+        //TO DO...
+    }
 }
+
 
 
 
