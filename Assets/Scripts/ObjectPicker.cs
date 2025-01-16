@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI; //import for UI components
 using TMPro;
@@ -7,12 +6,12 @@ public class ObjectPicker : MonoBehaviour
 {
 
     public Transform holdPoint;
-    public float pickUpRange = 5f;
+    public float pickUpRange = 3f;
     public LayerMask pickable;
     public GameObject heldObject = null;
     public Image snappablePointer, defaultPointer;
     public TextMeshProUGUI itemName;
-    public float rotationSpeed = 20f;
+    public float objMovmentspeeed = .2f;
 
 
     void Update()
@@ -21,7 +20,7 @@ public class ObjectPicker : MonoBehaviour
         HandleUI.HandleUIText(itemName, pickUpRange);
 
         //rotate
-        RotateItem();
+        MoveItemCloser();
 
         //pick up and drop
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -67,7 +66,7 @@ public class ObjectPicker : MonoBehaviour
 
     }
     //item name
-    
+
     void TryPickUpObject()
     {
 
@@ -195,25 +194,28 @@ public class ObjectPicker : MonoBehaviour
     {
         //TO DO...
     }
-    //rotate
-    void RotateItem()
+    //MoveItem closer or farther
+    void MoveItemCloser()
     {
-        if (Input.mouseScrollDelta.y < 0)
+        if (heldObject != null)
         {
-            if (heldObject != null)
+            // Get the forward direction relative to the player's view
+            Vector3 forwardDirection = Camera.main.transform.forward;
+
+            // Adjust the position of the held object based on mouse scroll
+            if (Input.mouseScrollDelta.y < 0)
             {
-                heldObject.transform.Rotate(rotationSpeed, 0, 0);
+                heldObject.transform.position -= forwardDirection * objMovmentspeeed;
             }
-        }
-        else if (Input.mouseScrollDelta.y > 0)
-        {
-            if (heldObject != null)
+            else if (Input.mouseScrollDelta.y > 0)
             {
-                heldObject.transform.Rotate(-rotationSpeed, 0, 0);
+                heldObject.transform.position += forwardDirection * objMovmentspeeed;
             }
         }
     }
+
 }
+
 
 
 
